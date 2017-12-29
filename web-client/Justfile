@@ -1,0 +1,17 @@
+all: check doc build test
+build: build-debug build-release
+build-debug:
+	cargo web build
+build-release:
+	cargo web build --release
+check:
+	cargo check
+doc:
+	cargo doc
+test: test-debug test-release
+test-debug:
+	cargo web test --nodejs
+test-release:
+	cargo web test --nodejs --release
+watch TARGET="all":
+	watchexec -cre rs,toml "just {{TARGET}}"
