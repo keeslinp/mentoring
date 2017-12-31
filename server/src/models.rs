@@ -1,6 +1,6 @@
 //! The database models.
 
-use bcrypt::{DEFAULT_COST, hash};
+use bcrypt::{hash, DEFAULT_COST};
 
 use schema::users;
 
@@ -30,8 +30,7 @@ pub(crate) struct NewUser<'a> {
 
 impl<'a> NewUser<'a> {
     pub fn new<'b>(username: &'a str, password: &'b str) -> NewUser<'a> {
-        let passhash = hash(password, DEFAULT_COST)
-            .expect("Failed to hash password");
+        let passhash = hash(password, DEFAULT_COST).expect("Failed to hash password");
         NewUser { username, passhash }
     }
 }

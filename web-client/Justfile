@@ -1,17 +1,27 @@
-all: check doc build test
+cargo_web_flags = "--use-system-emscripten"
+
+all: check doc build-debug test-debug
 build: build-debug build-release
 build-debug:
-	cargo web build
+	env CARGO_INCREMENTAL=1 cargo web build {{cargo_web_flags}}
 build-release:
-	cargo web build --release
+	cargo web build --release {{cargo_web_flags}}
 check:
 	cargo check
+clean:
+	cargo clean
 doc:
 	cargo doc
+static-debug: build-debug
+	rsync -a static target/
+	cp target/asmjs-unknown-emscripten/debug/mentoring-web-client.js target/static/app.js
+static-release: build-release
+	rsync -a static target/
+	cp target/asmjs-unknown-emscripten/release/mentoring-web-client.js target/static/app.js
 test: test-debug test-release
 test-debug:
-	cargo web test --nodejs
+	cargo web test --nodejs {{cargo_web_flags}}
 test-release:
-	cargo web test --nodejs --release
+	cargo web test --nodejs --release {{cargo_web_flags}}
 watch TARGET="all":
-	watchexec -cre rs,toml "just {{TARGET}}"
+	watchexec -cre css,html,rs,toml "just {{TARGET}}"

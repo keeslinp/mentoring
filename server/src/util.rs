@@ -13,8 +13,9 @@ pub fn getenv(name: &'static str) -> Result<Option<String>> {
 }
 
 pub fn getenv_parse<T>(name: &'static str) -> Result<Option<T>>
-    where T: FromStr,
-          T::Err: 'static + Send + StdError,
+where
+    T: FromStr,
+    T::Err: 'static + Send + StdError,
 {
     match getenv(name) {
         Ok(Some(val)) => val.parse()

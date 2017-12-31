@@ -1,7 +1,7 @@
 name = "mentoring-server"
 log = "{{name}}.log"
 
-all: check doc build test
+all: check doc build-debug test-debug
 build: build-debug build-release
 build-debug:
 	cargo build
@@ -9,6 +9,8 @@ build-release:
 	cargo build --release
 check:
 	cargo check
+clean:
+	cargo clean
 doc:
 	cargo doc
 run-debug: build-debug

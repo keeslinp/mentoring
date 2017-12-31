@@ -4,4 +4,9 @@ version = "0.1.0"
 authors = ["Nathan Ringo <remexre@gmail.com>"]
 
 [dependencies]
-yew = "0.0.1"
+nom = "3.2.1"
+pulldown-cmark = "0.1.0"
+regex = "0.2.3"
+serde_derive = "1.0.26"
+stdweb = { git = "https://github.com/keeslinp/stdweb", branch = "xml-http-request" }
+yew = { git = "https://github.com/DenisKolodin/yew.git" }

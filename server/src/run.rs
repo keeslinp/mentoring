@@ -12,15 +12,16 @@ use routes_static::handler as static_handler;
 use util::{getenv, getenv_parse};
 
 pub fn run() -> Result<Void> {
-    let host = getenv_parse("HTTP_HOST")?
-        .unwrap_or(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)));
+    let host =
+        getenv_parse("HTTP_HOST")?.unwrap_or(IpAddr::V6(Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 0)));
     let port = getenv_parse("HTTP_PORT")?.unwrap_or(8000);
 
     let log_format = getenv("LOG_FORMAT")?.and_then(|s| Format::new(&s));
     let (log_before, log_after) = Logger::new(log_format);
 
     let mut mount = Mount::new();
-    mount.mount("/api/", api_handler())
+    mount
+        .mount("/api/", api_handler())
         .mount("/", static_handler()?);
 
     let mut chain = Chain::new(mount);
@@ -30,5 +31,7 @@ pub fn run() -> Result<Void> {
     Iron::new(chain)
         .http((host, port))
         .chain_err(|| ErrorKind::CouldntStartServer)?;
-    loop { yield_now(); }
+    loop {
+        yield_now();
+    }
 }
