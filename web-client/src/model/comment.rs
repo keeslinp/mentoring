@@ -1,7 +1,5 @@
-use model::User;
-
 #[derive(Debug)]
 pub struct Comment {
-    pub author: User,
+    pub author_id: usize,
     pub contents: String,
 }

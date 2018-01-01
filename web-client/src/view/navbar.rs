@@ -12,7 +12,8 @@ pub fn navbar(model: &Model) -> Html<Msg> {
 
     html! {
         <nav class=("navbar", "navbar-expand-sm", "navbar-light", "bg-light"),>
-            { model.index().make_link("navbar-brand", "mentoring.acm.umn.edu") }
+            // TODO: https://github.com/rust-lang/rust/issues/25725
+            { model.index().make_link("mentoring.acm.umn.edu", Some("navbar-brand")) }
             <div class="navbar-collapse", id="navbarNav",>
                 <ul class="navbar-nav",>
                     { for links.into_iter() }
@@ -24,7 +25,8 @@ pub fn navbar(model: &Model) -> Html<Msg> {
 }
 
 fn navbar_item(model: &Model, route: Route, name: &str) -> Html<Msg> {
-    let a = route.make_link("nav-link", name);
+    // TODO: https://github.com/rust-lang/rust/issues/25725
+    let a = route.make_link(name, Some("nav-link"));
     if model.route == route {
         html! {
             <li class=("nav-item", "active"),>{ a }</li>

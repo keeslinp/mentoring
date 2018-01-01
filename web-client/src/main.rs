@@ -1,11 +1,18 @@
-extern crate pulldown_cmark;
+extern crate chrono;
+extern crate chrono_humanize;
+#[macro_use]
+extern crate lazy_static;
+#[macro_use]
+extern crate log;
 #[macro_use]
 extern crate nom;
+extern crate pulldown_cmark;
 extern crate regex;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
 extern crate stdweb;
+extern crate url;
 #[macro_use]
 extern crate yew;
 
@@ -13,75 +20,39 @@ mod model;
 mod update;
 mod view;
 
+use std::collections::HashMap;
+
+use chrono::{Duration, Utc};
 use yew::html::program;
 
-use model::Model;
+use model::{Model, Project, User};
 use update::update;
 use view::view;
 
 fn main() {
     stdweb::initialize();
+
     let mut model = Model::default();
-    model.projects = vec![
-        model::Project {
-            comments: Vec::new(),
-            description: "\
-1.  List item one.
+    model.projects = HashMap::new();
+    model.projects.insert(0, Project {
+        comments: Vec::new(),
+        created: Utc::now() - Duration::weeks(1),
+        creator_id: 0,
+        developer_id: None,
+        name: "Mentoring Site".to_string(),
+        long_description: "This is the long description.
 
-    List item one continued with a second paragraph followed by an
-    Indented block.
-
-        $ ls *.sh
-        $ mv *.sh ~/tmp
-
-    List item continued with a third paragraph.
-
-2.  List item two continued with an open block.
-
-    This paragraph is part of the preceding list item.
-
-    1. This list is nested and does not require explicit item continuation.
-
-       This paragraph is part of the preceding list item.
-
-    2. List item b.
-
-    This paragraph belongs to item two of the outer list.
-
-# one
-## two
-### three
-
-> a man
-> a plan
-> a canal
-> panama
-
-*Footnotes* and **Tables**
-
-asdf [^qwerty]
-
-[^qwerty]: zxcvbn
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-
----
-
-at least I can `code` inline?
-
-[imgur](imgur.com)
-
-![cat](https://i.imgur.com/nz8Sh.gif)
-
-#### end".to_string(),
-            name: "foo some bars!".to_string(),
-            mentor: None,
-            mentee: None,
-        }
-    ];
+Basically, make a site to keep track of side projects and offer mentoring.".to_string(),
+        mentor_id: None,
+        short_description: "This site!".to_string(),
+        tags: vec![
+            "postgresql".to_string(),
+            "webdev".to_string(),
+        ],
+    });
+    model.users = HashMap::new();
+    model.users.insert(0, User {
+        username: "foobar".to_string(),
+    });
     program(model, update, view);
 }

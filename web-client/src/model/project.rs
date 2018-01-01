@@ -1,59 +1,46 @@
-use yew::html::Html;
+use chrono::{DateTime, Utc};
 
-use model::{Comment, Model, User};
-use update::Msg;
-use view::Render;
-use view::markdown::render_markdown;
+use model::{Comment, MaybeLoading, Model, User};
 
 #[derive(Debug)]
 pub struct Project {
     pub comments: Vec<Comment>,
-    pub description: String,
+    pub created: DateTime<Utc>,
+    pub creator_id: usize,
+    pub developer_id: Option<usize>,
+    pub long_description: String,
     pub name: String,
-    pub mentor: Option<User>,
-    pub mentee: Option<User>,
+    pub mentor_id: Option<usize>,
+    pub short_description: String,
+    pub tags: Vec<String>,
 }
 
-impl Render for Project {
-    fn render(&self, model: &Model) -> Html<Msg> {
-        let mentor = if let Some(ref mentor) = self.mentor {
-            html! {
-                <span>
-                    { "Mentored by " }
-                    { mentor.render(model) }
-                </span>
-            }
-        } else {
-            html! {
-                <span>{ "No mentor" }</span>
-            }
-        };
-        let mentee = if let Some(ref mentee) = self.mentee {
-            unimplemented!() // TODO Wording
-        } else {
-            html! {
-                <span>{ "No mentee" }</span>
-            }
-        };
+impl Project {
+    pub fn creator<'a>(&self, model: &'a Model) -> Option<&'a User> {
+        model.find_user(self.creator_id)
+    }
 
-        html! {
-            <div class="card",>
-                <div class="card-body",>
-                    <h5 class="card-title",>
-                        { &self.name }
-                    </h5>
-                    <h6 class=("card-subtitle", "mb-2", "text-muted"),>
-                        { self.comments.len() }
-                        { " comments, " }
-                        { mentor }
-                        { ", " }
-                        { mentee }
-                    </h6>
-                    <div class="card-text",>
-                        { render_markdown(&self.description) }
-                    </div>
-                </div>
-            </div>
+    pub fn developer<'a>(&self, model: &'a Model) -> MaybeLoading<&'a User> {
+        if let Some(developer_id) = self.developer_id {
+            if let Some(user) = model.find_user(developer_id) {
+                MaybeLoading::Present(user)
+            } else {
+                MaybeLoading::Loading
+            }
+        } else {
+            MaybeLoading::NotPresent
+        }
+    }
+
+    pub fn mentor<'a>(&self, model: &'a Model) -> MaybeLoading<&'a User> {
+        if let Some(mentor_id) = self.mentor_id {
+            if let Some(user) = model.find_user(mentor_id) {
+                MaybeLoading::Present(user)
+            } else {
+                MaybeLoading::Loading
+            }
+        } else {
+            MaybeLoading::NotPresent
         }
     }
 }

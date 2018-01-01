@@ -10,3 +10,8 @@ regex = "0.2.3"
 serde_derive = "1.0.26"
 stdweb = { git = "https://github.com/keeslinp/stdweb", branch = "xml-http-request" }
 yew = { git = "https://github.com/DenisKolodin/yew.git" }
+log = "0.4.1"
+chrono = "0.4.0"
+chrono-humanize = "0.0.10"
+lazy_static = "1.0.0"
+url = "1.6.0"

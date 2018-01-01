@@ -1,18 +1,12 @@
 //! TODO: This should become its own crate.
 
-use pulldown_cmark::{Alignment, Event, Options, Parser, Tag};
+use pulldown_cmark::{Alignment, Event, OPTION_ENABLE_TABLES, Parser, Tag};
 use yew::html::Html;
 use yew::virtual_dom::{VNode, VTag, VText};
 
 /// Renders a string of Markdown to HTML with the default options (footnotes
 /// disabled, tables enabled).
 pub fn render_markdown<M>(src: &str) -> Html<M> {
-    use pulldown_cmark::OPTION_ENABLE_TABLES;
-    render_markdown_opts(src, OPTION_ENABLE_TABLES)
-}
-
-/// Renders a string of Markdown to HTML.
-pub fn render_markdown_opts<M>(src: &str, opts: Options) -> Html<M> {
     let mut elems = vec![];
     let mut spine = vec![];
 
@@ -24,7 +18,7 @@ pub fn render_markdown_opts<M>(src: &str, opts: Options) -> Html<M> {
         }}
     }
 
-    for ev in Parser::new_ext(src, opts) {
+    for ev in Parser::new_ext(src, OPTION_ENABLE_TABLES) {
         match ev {
             Event::Start(tag) => {
                 spine.push(make_tag(tag));

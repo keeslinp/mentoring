@@ -1,8 +1,4 @@
-use yew::html::Html;
-
-use model::{CurrentUser, Model, Route};
-use update::Msg;
-use view::Render;
+use model::CurrentUser;
 
 #[derive(Debug)]
 pub struct User {
@@ -14,12 +10,5 @@ impl From<CurrentUser> for User {
         User {
             username: cu.username,
         }
-    }
-}
-
-impl Render for User {
-    fn render(&self, model: &Model) -> Html<Msg> {
-        Route::User(self.username.clone())
-            .make_link("User", &self.username)
     }
 }
